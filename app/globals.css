@@ -40,6 +40,11 @@ html,
 body {
   font-family: var(--font-inter), 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   background-color: var(--bg);
+  background-image: 
+    radial-gradient(#CBD5E1 0.85px, transparent 0.85px),
+    radial-gradient(#E2E8F0 0.85px, var(--bg) 0.85px);
+  background-size: 24px 24px;
+  background-position: 0 0, 12px 12px;
   color: var(--text);
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
