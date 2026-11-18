@@ -13,8 +13,16 @@ const TEACHER_NAV = [
   { href: '/teacher', label: 'Class Overview', icon: 'fa-solid fa-users' },
   { href: '/teacher/heatmap', label: 'Topic Heatmap', icon: 'fa-solid fa-table-cells' },
   { href: '/teacher/weak-topics', label: 'Weak Topics', icon: 'fa-solid fa-triangle-exclamation' },
+  { href: '/teacher/attendance', label: 'Attendance', icon: 'fa-solid fa-clipboard-user' },
   { href: '/teacher/scores', label: 'Add Scores', icon: 'fa-solid fa-pen-to-square' },
   { href: '/teacher/subjects', label: 'Subjects & Topics', icon: 'fa-solid fa-book' },
+];
+
+const ADMIN_NAV = [
+  { href: '/admin', label: 'User Management', icon: 'fa-solid fa-users-gear' },
+  { href: '/teacher', label: 'Class Overview', icon: 'fa-solid fa-users' },
+  { href: '/teacher/heatmap', label: 'Topic Heatmap', icon: 'fa-solid fa-table-cells' },
+  { href: '/teacher/attendance', label: 'Attendance', icon: 'fa-solid fa-clipboard-user' },
 ];
 
 // Shared layout shell with fixed left sidebar, top bar, and mobile drawer
@@ -34,8 +42,21 @@ export default function AppShell({ title, requiredRole, children }) {
           router.replace('/login');
           return;
         }
-        if (requiredRole && data.user.role !== requiredRole) {
-          router.replace(data.user.role === 'teacher' ? '/teacher' : '/student');
+
+        // Allow admin to access teacher pages
+        const isAllowed =
+          !requiredRole ||
+          data.user.role === requiredRole ||
+          (requiredRole === 'teacher' && data.user.role === 'admin');
+
+        if (!isAllowed) {
+          if (data.user.role === 'admin') {
+            router.replace('/admin');
+          } else if (data.user.role === 'teacher') {
+            router.replace('/teacher');
+          } else {
+            router.replace('/student');
+          }
           return;
         }
         setUser(data.user);
@@ -54,7 +75,12 @@ export default function AppShell({ title, requiredRole, children }) {
     router.replace('/login');
   }
 
-  const navItems = user?.role === 'teacher' ? TEACHER_NAV : STUDENT_NAV;
+  const navItems =
+    user?.role === 'admin'
+      ? ADMIN_NAV
+      : user?.role === 'teacher'
+      ? TEACHER_NAV
+      : STUDENT_NAV;
 
   return (
     <div className="app-shell">

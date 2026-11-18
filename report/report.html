@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Academic Gap Detection System - Project Report</title>
+<style>
+  @page {
+    size: A4 portrait;
+    margin: 0;
+  }
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+  body {
+    background: #e2e8f0;
+    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif;
+    font-size: 10.5pt;
+    line-height: 1.42;
+    color: #1e293b;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .page {
+    width: 210mm;
+    height: 297mm;
+    padding: 20mm 22mm;
+    margin: 10mm auto;
+    background: #ffffff;
+    position: relative;
+    page-break-after: always;
+    break-after: page;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    overflow: hidden;
+  }
+
+  @media print {
+    body {
+      background: transparent;
+    }
+    .page {
+      margin: 0;
+      page-break-after: always;
+      break-after: page;
+      box-shadow: none;
+    }
+  }
+
+  @media screen {
+    .page {
+      box-shadow: 0 4px 14px rgba(0,0,0,0.12);
+    }
+  }
+
+  .page-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Header and Titles */
+  .page-header {
+    border-bottom: 1.5px solid #0F766E;
+    padding-bottom: 4px;
+    margin-bottom: 12px;
+  }
+  .page-header h2 {
+    font-size: 16pt;
+    color: #0F766E;
+    font-weight: 700;
+    letter-spacing: -0.2px;
+  }
+  .page-header .subtitle {
+    font-size: 9pt;
+    color: #64748B;
+    margin-top: 1px;
+    font-weight: 500;
+  }
+
+  /* Footer */
+  .page-footer {
+    border-top: 1px solid #E2E8F0;
+    padding-top: 5px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 8.5pt;
+    color: #64748B;
+  }
+
+  /* Typography */
+  h3 {
+    font-size: 11.5pt;
+    color: #0F766E;
+    margin-top: 8px;
+    margin-bottom: 4px;
+    font-weight: 600;
+  }
+  p {
+    margin-bottom: 6px;
+    text-align: justify;
+  }
+  ul, ol {
+    margin-left: 18px;
+    margin-bottom: 6px;
+  }
+  li {
+    margin-bottom: 3px;
+  }
+
+  /* Tables */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 4px;
+    margin-bottom: 8px;
+    font-size: 9pt;
+  }
+  th, td {
+    border: 1px solid #CBD5E1;
+    padding: 4.5px 7px;
+    text-align: left;
+    vertical-align: top;
+  }
+  th {
+    background-color: #F1F5F9;
+    color: #0F766E;
+    font-weight: 600;
+  }
+  tr:nth-child(even) td {
+    background-color: #F8FAFC;
+  }
+
+  /* Code Block */
+  pre {
+    background: #F8FAFC;
+    border: 1px solid #E2E8F0;
+    border-left: 3px solid #0F766E;
+    padding: 6px 9px;
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 8pt;
+    line-height: 1.3;
+    color: #0F172A;
+    margin-bottom: 6px;
+    overflow: hidden;
+  }
+
+  /* Screenshots Grid */
+  .grid-2x2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 4px;
+  }
+  .screenshot-card {
+    display: flex;
+    flex-direction: column;
+  }
+  .screenshot-card img {
+    width: 100%;
+    height: 98mm;
+    object-fit: cover;
+    object-position: top;
+    border: 1px solid #CBD5E1;
+    border-radius: 4px;
+  }
+  .caption {
+    font-size: 8pt;
+    color: #475569;
+    margin-top: 4px;
+    line-height: 1.3;
+  }
+  .caption strong {
+    color: #0F766E;
+    font-style: italic;
+  }
+
+  /* Cover styling */
+  .cover-container {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    text-align: center;
+    padding: 8mm 4mm;
+    border: 1.5px solid #0F766E;
+  }
+  .cover-top h1 {
+    font-size: 22pt;
+    color: #0F766E;
+    letter-spacing: 0.5px;
+    font-weight: 800;
+    line-height: 1.2;
+    margin-bottom: 6px;
+  }
+  .cover-top .tagline {
+    font-size: 11pt;
+    color: #475569;
+    font-weight: 500;
+  }
+  .cover-badge {
+    margin: 16px auto;
+    display: inline-block;
+    padding: 5px 16px;
+    background: #F0FDFA;
+    border: 1px solid #99F6E4;
+    color: #0F766E;
+    font-weight: 700;
+    font-size: 10.5pt;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .cover-middle p {
+    text-align: center;
+    margin-bottom: 4px;
+    font-size: 9.5pt;
+    color: #475569;
+  }
+  .cover-author {
+    font-size: 13.5pt;
+    font-weight: 700;
+    color: #0F172A;
+    margin-top: 2px;
+    margin-bottom: 2px;
+  }
+  .cover-detail {
+    font-size: 9.5pt;
+    color: #334155;
+    margin-bottom: 2px;
+  }
+  .cover-bottom {
+    margin-top: 10px;
+    font-size: 9.5pt;
+    color: #334155;
+    border-top: 1px solid #E2E8F0;
+    padding-top: 10px;
+  }
+
+  /* Certificate signatures */
+  .signatures {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 32px;
+    padding: 0 10px;
+  }
+  .sig-block {
+    text-align: center;
+    width: 40%;
+  }
+  .sig-line {
+    border-top: 1px solid #334155;
+    margin-bottom: 5px;
+  }
+
+  /* Inline SVG box */
+  .diagram-box {
+    background: #F8FAFC;
+    border: 1px solid #E2E8F0;
+    border-radius: 4px;
+    padding: 6px;
+    text-align: center;
+    margin: 6px 0;
+  }
+</style>
+</head>
+<body>
+
+<!-- ================= PAGE 1: COVER ================= -->
+<section class="page" id="page-1">
+  <div class="cover-container">
+    <div class="cover-top">
+      <div style="font-size: 12.5pt; color: #64748B; font-weight: 600; margin-bottom: 10px; letter-spacing: 1px;">AJEENKYA DY PATIL UNIVERSITY, PUNE</div>
+      <div style="font-size: 9.5pt; color: #475569; margin-bottom: 20px;">SCHOOL OF INFORMATION TECHNOLOGY</div>
+      <h1>ACADEMIC GAP DETECTION SYSTEM</h1>
+      <div class="tagline">A Rule-Based Learning Gap and Prerequisite Tracking Application</div>
+      <div class="cover-badge">Mini Project Report</div>
+    </div>
+
+    <div class="cover-middle">
+      <p>Submitted in partial fulfillment of the requirements for the award of the degree of</p>
+      <p style="font-weight: 700; font-size: 11.5pt; color: #0F766E;">BACHELOR OF COMPUTER APPLICATIONS</p>
+      <p style="font-weight: 600; color: #334155;">Specialization: Artificial Intelligence &amp; Data Science</p>
+
+      <div style="margin-top: 22px;">
+        <p style="margin-bottom: 2px;">Submitted by:</p>
+        <div class="cover-author">Swapnil Sahu</div>
+        <div class="cover-detail">PRN: 2024BCAAI042 | Roll No: 42</div>
+      </div>
+
+      <div style="margin-top: 18px;">
+        <p style="margin-bottom: 2px;">Under the Guidance of:</p>
+        <div style="font-weight: 700; color: #0F172A; font-size: 10.5pt;">Prof. Rajesh Gupta</div>
+        <div class="cover-detail">Assistant Professor, Department of Computer Applications</div>
+      </div>
+    </div>
+
+    <div class="cover-bottom">
+      <p style="font-weight: 600; color: #0F172A; text-align: center;">DEPARTMENT OF COMPUTER APPLICATIONS</p>
+      <p style="text-align: center;">Ajeenkya DY Patil University, Charholi Budruk, Pune &ndash; 412105</p>
+      <p style="text-align: center; margin-top: 4px; font-weight: 600; color: #0F766E;">Semester VI | Academic Year 2026-27</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= PAGE 2: CERTIFICATE & ACKNOWLEDGEMENT ================= -->
+<section class="page" id="page-2">
+  <div class="page-content">
+    <div class="page-header">
+      <h2>Certificate of Completion</h2>
+      <div class="subtitle">Department of Computer Applications &bull; Academic Year 2026-27</div>
+    </div>
+
+    <p style="margin-top: 8px; line-height: 1.55;">
+      This is to certify that the mini project report entitled <strong>"Academic Gap Detection System"</strong> is a bona fide record of work carried out by <strong>Swapnil Sahu</strong> (PRN: <strong>2024BCAAI042</strong>, Roll No: <strong>42</strong>) in partial fulfillment of the requirements for the degree of <strong>Bachelor of Computer Applications (AI &amp; Data Science)</strong> at Ajeenkya DY Patil University, Pune during the academic year 2026-27.
+    </p>
+    <p style="line-height: 1.55; margin-top: 8px;">
+      The project was developed under regular supervision and adheres to the academic and technical standards prescribed by the university curriculum. The candidate has satisfactorily demonstrated the working web application and presented this comprehensive documentation.
+    </p>
+
+    <div class="signatures">
+      <div class="sig-block">
+        <div style="height: 44px;"></div>
+        <div class="sig-line"></div>
+        <div style="font-weight: 700;">Prof. Rajesh Gupta</div>
+        <div style="font-size: 8.5pt; color: #64748B;">Project Guide &bull; Asst. Professor</div>
+      </div>
+      <div class="sig-block">
+        <div style="height: 44px;"></div>
+        <div class="sig-line"></div>
+        <div style="font-weight: 700;">Dr. S. K. Kulkarni</div>
+        <div style="font-size: 8.5pt; color: #64748B;">Head of Department (BCA)</div>
+      </div>
+    </div>
+
+    <div style="margin-top: 28px;" class="page-header">
+      <h2>Acknowledgement</h2>
+      <div class="subtitle">Expression of Gratitude</div>
+    </div>
+
+    <p style="line-height: 1.55;">
+      I would like to express my sincere gratitude to my project guide, Prof. Rajesh Gupta, for his continuous guidance, encouragement, and practical suggestions throughout the development of this academic gap detection application. I also thank Dr. S. K. Kulkarni, Head of the Department of Computer Applications, and the faculty members of the School of Information Technology for providing necessary lab facilities and technical support. My heartfelt thanks go to Ajeenkya DY Patil University for offering a curriculum that fosters hands-on problem solving. Finally, I appreciate the feedback received from my peers during testing and demonstration sessions.
+    </p>
+  </div>
+
+  <div class="page-footer">
+    <span>Academic Gap Detection System &mdash; Mini Project Report</span>
+    <span>Page 2 of 10</span>
+  </div>
+</section>
+
+<!-- ================= PAGE 3: ABSTRACT & TABLE OF CONTENTS ================= -->
+<section class="page" id="page-3">
+  <div class="page-content">
+    <div class="page-header">
+      <h2>Abstract &amp; Table of Contents</h2>
+      <div class="subtitle">Overview and Document Layout</div>
+    </div>
+
+    <h3>Abstract</h3>
+    <p style="font-size: 9.5pt; line-height: 1.48; margin-bottom: 12px;">
+      In conventional academic evaluation systems, student performance is typically summarized using aggregate percentages or letter grades. While straightforward, aggregate marks mask critical concept-level deficiencies and fail to explain why a student is struggling. For instance, a student failing Advanced Binary Search Trees may simply lack foundational skills in Arrays and Pointers. This project presents the Academic Gap Detection System, a transparent, rule-based web application that identifies topic-level learning gaps, traces prerequisite dependency chains to uncover root causes, monitors attendance vulnerability, and generates prioritized recovery study plans. Developed using Next.js 14, Supabase (PostgreSQL), and Chart.js, the system avoids complex black-box machine learning models in favor of deterministic threshold logic that works immediately with small classroom datasets. It provides students with actionable remedial pathways while offering educators real-time visual heatmaps and class-wide gap analytics to drive timely classroom interventions.
+    </p>
+
+    <h3 style="margin-top: 10px;">Table of Contents</h3>
+    <table style="margin-top: 4px;">
+      <thead>
+        <tr>
+          <th style="width: 15%;">Section</th>
+          <th style="width: 70%;">Title</th>
+          <th style="width: 15%; text-align: right;">Page No.</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>&mdash;</td>
+          <td>Cover Page</td>
+          <td style="text-align: right;">1</td>
+        </tr>
+        <tr>
+          <td>&mdash;</td>
+          <td>Certificate of Completion &amp; Acknowledgement</td>
+          <td style="text-align: right;">2</td>
+        </tr>
+        <tr>
+          <td>&mdash;</td>
+          <td>Abstract and Table of Contents</td>
+          <td style="text-align: right;">3</td>
+        </tr>
+        <tr>
+          <td>Section 1</td>
+          <td>Introduction, Problem Statement, Objectives, and Scope</td>
+          <td style="text-align: right;">4</td>
+        </tr>
+        <tr>
+          <td>Section 2</td>
+          <td>Technology Stack &amp; Deployment Architecture</td>
+          <td style="text-align: right;">5</td>
+        </tr>
+        <tr>
+          <td>Section 3</td>
+          <td>System Design, Architecture Diagram, and Data Schema</td>
+          <td style="text-align: right;">6</td>
+        </tr>
+        <tr>
+          <td>Section 4</td>
+          <td>Modules and Core Gap Detection Logic</td>
+          <td style="text-align: right;">7</td>
+        </tr>
+        <tr>
+          <td>Section 5</td>
+          <td>System Screenshots &ndash; Part 1: Authentication &amp; Faculty Analytics</td>
+          <td style="text-align: right;">8</td>
+        </tr>
+        <tr>
+          <td>Section 6</td>
+          <td>System Screenshots &ndash; Part 2: Student Dashboard &amp; Remedial Plan</td>
+          <td style="text-align: right;">9</td>
+        </tr>
+        <tr>
+          <td>Section 7</td>
+          <td>Testing, Limitations, Future Scope, Conclusion, and References</td>
+          <td style="text-align: right;">10</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="page-footer">
+    <span>Academic Gap Detection System &mdash; Mini Project Report</span>
+    <span>Page 3 of 10</span>
+  </div>
+</section>
+
+<!-- ================= PAGE 4: INTRODUCTION & OBJECTIVES ================= -->
+<section class="page" id="page-4">
+  <div class="page-content">
+    <div class="page-header">
+      <h2>1. Introduction &amp; Problem Statement</h2>
+      <div class="subtitle">Context, Objectives, and Project Boundaries</div>
+    </div>
+
+    <h3>1.1 Introduction</h3>
+    <p>
+      Higher education coursework is strictly cumulative. Advanced engineering and computer science concepts build directly on foundational topics taught earlier in the semester. For example, a student cannot understand Database Normalization without grasping Relational Algebra, nor implement Graph Algorithms without proficiency in Linked Lists and Queues. When students struggle, traditional university evaluation systems report aggregate percentages such as 55% in Data Structures. Such aggregate scores do not tell the learner which specific concept went wrong or where remediation must start.
+    </p>
+    <p>
+      The Academic Gap Detection System is designed to solve this diagnostic problem. It tracks scores at the individual topic level and maps topic prerequisites in a directed graph. The system computes topic mastery, assesses performance trends across consecutive assessments, identifies root-cause prerequisites, monitors attendance risk, and constructs a sequenced study schedule.
+    </p>
+
+    <h3>1.2 Problem Statement</h3>
+    <p>
+      Traditional educational portals suffer from three major shortcomings:
+    </p>
+    <ul>
+      <li><strong>Lack of Granularity:</strong> Marks are recorded per exam rather than per topic, concealing localized knowledge deficits.</li>
+      <li><strong>Prerequisite Blindness:</strong> A student who fails an advanced concept is repeatedly tested on it, when the true failure originates from an unlearned prerequisite.</li>
+      <li><strong>Delayed Intervention:</strong> Teachers lack a consolidated visual overview to quickly spot topics where over 40% of the class is failing simultaneously.</li>
+    </ul>
+
+    <h3>1.3 Project Objectives</h3>
+    <ul>
+      <li><strong>Topic-Level Mastery Assessment:</strong> Calculate deterministic percentage scores for each topic across assessments.</li>
+      <li><strong>Root-Cause Prerequisite Tracing:</strong> Automatically trace prerequisite chains to distinguish foundational "Root Gaps" from downstream "Affected" topics.</li>
+      <li><strong>Performance Trend Tracking:</strong> Compare the two most recent assessments to flag rapid learning drops (drops of 10% or more).</li>
+      <li><strong>Attendance Risk Monitoring:</strong> Correlate academic progress with subject attendance, flagging students below the 75% threshold.</li>
+      <li><strong>Prioritized Study Plan Generation:</strong> Produce an actionable study sequence with plain-language diagnostic explanations.</li>
+    </ul>
+
+    <h3>1.4 Scope of the Project</h3>
+    <p>
+      The application supports student and teacher user roles. In-scope capabilities include role-based authentication, student self-diagnostic dashboards, subject topic trees, individualized study plans, teacher class rosters, topic heatmaps, and systemic weak topic identification. Out of scope are online exam proctoring, payment gateways, and LMS content hosting.
+    </p>
+  </div>
+
+  <div class="page-footer">
+    <span>Academic Gap Detection System &mdash; Mini Project Report</span>
+    <span>Page 4 of 10</span>
+  </div>
+</section>
+
+<!-- ================= PAGE 5: TECH STACK ================= -->
+<section class="page" id="page-5">
+  <div class="page-content">
+    <div class="page-header">
+      <h2>2. Technology Stack &amp; Deployment</h2>
+      <div class="subtitle">Tools, Libraries, and Hosting Architecture</div>
+    </div>
+
+    <h3>2.1 Technology Selection Table</h3>
+    <table>
+      <thead>
+        <tr>
+          <th style="width: 20%;">Layer</th>
+          <th style="width: 25%;">Technology</th>
+          <th style="width: 55%;">Why It Was Used</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Language</strong></td>
+          <td>JavaScript (Node.js ES2023)</td>
+          <td>Universal runtime across client and server. Native JSON handling without compilation overhead.</td>
+        </tr>
+        <tr>
+          <td><strong>Framework</strong></td>
+          <td>Next.js 14 (App Router)</td>
+          <td>Enables modular server-side API routes, React components, and unified full-stack routing.</td>
+        </tr>
+        <tr>
+          <td><strong>Database</strong></td>
+          <td>Supabase (PostgreSQL 15)</td>
+          <td>Relational database providing strong referential integrity, foreign keys, and cascading deletes.</td>
+        </tr>
+        <tr>
+          <td><strong>Authentication</strong></td>
+          <td>bcryptjs &amp; jose (JWT)</td>
+          <td>Secure password hashing and signed, stateless, HttpOnly session cookies without third-party lock-in.</td>
+        </tr>
+        <tr>
+          <td><strong>Visualizations</strong></td>
+          <td>Chart.js &amp; react-chartjs-2</td>
+          <td>Responsive HTML5 canvas rendering for bar charts and mastery breakdown doughnut charts.</td>
+        </tr>
+        <tr>
+          <td><strong>Styling &amp; Icons</strong></td>
+          <td>Vanilla CSS &amp; Font Awesome 6</td>
+          <td>Design consistency via CSS custom properties without CSS bloat; comprehensive icon set.</td>
+        </tr>
+        <tr>
+          <td><strong>Testing &amp; QA</strong></td>
+          <td>Node Test Runner &amp; Playwright</td>
+          <td>Headless browser automation and pure function assertions to verify gap logic and end-to-end flows.</td>
+        </tr>
+        <tr>
+          <td><strong>Hosting</strong></td>
+          <td>Vercel Cloud Platform</td>
+          <td>Automated CI/CD from Git, edge caching, and serverless Node.js execution with high availability.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>2.2 Deployment Architecture</h3>
+    <p>
+      The application is deployed on Vercel's serverless edge infrastructure. When a user requests a dashboard or submits credentials, Vercel executes the Next.js API route inside an isolated serverless function container. All state is maintained externally in Supabase PostgreSQL, ensuring zero dependency on persistent local disk storage.
+    </p>
+    <p>
+      Sensitive keys (<tt>SUPABASE_SERVICE_KEY</tt> and <tt>SESSION_SECRET</tt>) are injected strictly through Vercel environment variables. Browser clients interact only with server-side routes; client-side code never receives the database secret key. This design enforces strict data isolation and secures student records.
+    </p>
+
+    <div class="diagram-box">
+      <svg width="100%" height="65" viewBox="0 0 540 65" xmlns="http://www.w3.org/2000/svg">
+        <rect x="10" y="8" width="115" height="48" rx="4" fill="#F1F5F9" stroke="#0F766E" stroke-width="1.2"/>
+        <text x="67" y="28" font-size="9" font-weight="700" text-anchor="middle" fill="#0F766E">Client Browser</text>
+        <text x="67" y="42" font-size="8" text-anchor="middle" fill="#475569">React 18 SPA</text>
+
+        <line x1="125" y1="32" x2="190" y2="32" stroke="#0F766E" stroke-width="1.2"/>
+        <text x="157" y="25" font-size="7.5" text-anchor="middle" fill="#64748B">HTTPS/Cookie</text>
+
+        <rect x="190" y="8" width="155" height="48" rx="4" fill="#E6F4F3" stroke="#0F766E" stroke-width="1.2"/>
+        <text x="267" y="28" font-size="9" font-weight="700" text-anchor="middle" fill="#0F766E">Vercel Serverless</text>
+        <text x="267" y="42" font-size="8" text-anchor="middle" fill="#475569">Next.js API &amp; Gap Engine</text>
+
+        <line x1="345" y1="32" x2="410" y2="32" stroke="#0F766E" stroke-width="1.2"/>
+        <text x="377" y="25" font-size="7.5" text-anchor="middle" fill="#64748B">Service Key</text>
+
+        <rect x="410" y="8" width="120" height="48" rx="4" fill="#F1F5F9" stroke="#0F766E" stroke-width="1.2"/>
+        <text x="470" y="28" font-size="9" font-weight="700" text-anchor="middle" fill="#0F766E">Supabase DB</text>
+        <text x="470" y="42" font-size="8" text-anchor="middle" fill="#475569">PostgreSQL 15</text>
+      </svg>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <span>Academic Gap Detection System &mdash; Mini Project Report</span>
+    <span>Page 5 of 10</span>
+  </div>
+</section>
+
+<!-- ================= PAGE 6: SYSTEM DESIGN & SCHEMA ================= -->
+<section class="page" id="page-6">
+  <div class="page-content">
+    <div class="page-header">
+      <h2>3. System Design &amp; Data Model</h2>
+      <div class="subtitle">User Roles, System Architecture, and Database Schema</div>
+    </div>
+
+    <h3>3.1 User Roles &amp; Capabilities</h3>
+    <ul>
+      <li><strong>Student Role:</strong> Accesses personal dashboard, views overall readiness percentage, inspects topic status badges, observes prerequisite warnings, and navigates a prioritized study sequence.</li>
+      <li><strong>Teacher Role:</strong> Monitors class readiness distribution, explores student-by-topic mastery heatmaps, tracks low attendance warnings, and reviews class-wide weak topics where over 40% fail.</li>
+    </ul>
+
+    <h3>3.2 Database Schema and Relational Model</h3>
+    <p>
+      The PostgreSQL database contains 5 normalized tables. Foreign keys enforce cascade deletes to prevent orphaned records. The <tt>topics</tt> table implements a self-referential foreign key (<tt>prerequisite_topic_id</tt>) to model dependency graphs.
+    </p>
+
+    <div class="diagram-box">
+      <svg width="100%" height="220" viewBox="0 0 540 220" xmlns="http://www.w3.org/2000/svg">
+        <!-- users table -->
+        <rect x="10" y="10" width="150" height="85" rx="4" fill="#FFFFFF" stroke="#0F766E" stroke-width="1.5"/>
+        <rect x="10" y="10" width="150" height="20" fill="#0F766E"/>
+        <text x="85" y="24" fill="#FFFFFF" font-size="9" font-weight="700" text-anchor="middle">users</text>
+        <text x="18" y="44" font-size="8" fill="#0F172A">PK id (SERIAL)</text>
+        <text x="18" y="57" font-size="8" fill="#0F172A">name (TEXT)</text>
+        <text x="18" y="70" font-size="8" fill="#0F172A">email (UNIQUE)</text>
+        <text x="18" y="83" font-size="8" fill="#0F172A">role (student/teacher)</text>
+
+        <!-- subjects table -->
+        <rect x="370" y="10" width="160" height="72" rx="4" fill="#FFFFFF" stroke="#0F766E" stroke-width="1.5"/>
+        <rect x="370" y="10" width="160" height="20" fill="#0F766E"/>
+        <text x="450" y="24" fill="#FFFFFF" font-size="9" font-weight="700" text-anchor="middle">subjects</text>
+        <text x="378" y="44" font-size="8" fill="#0F172A">PK id (SERIAL)</text>
+        <text x="378" y="57" font-size="8" fill="#0F172A">name (TEXT)</text>
+        <text x="378" y="70" font-size="8" fill="#0F172A">code (UNIQUE)</text>
+
+        <!-- topics table -->
+        <rect x="370" y="110" width="160" height="98" rx="4" fill="#FFFFFF" stroke="#0F766E" stroke-width="1.5"/>
+        <rect x="370" y="110" width="160" height="20" fill="#0F766E"/>
+        <text x="450" y="124" fill="#FFFFFF" font-size="9" font-weight="700" text-anchor="middle">topics</text>
+        <text x="378" y="144" font-size="8" fill="#0F172A">PK id (SERIAL)</text>
+        <text x="378" y="157" font-size="8" fill="#0F172A">FK subject_id &rarr; subjects</text>
+        <text x="378" y="170" font-size="8" fill="#0F172A">name (TEXT)</text>
+        <text x="378" y="183" font-size="8" fill="#0F172A">order_no (INT)</text>
+        <text x="378" y="196" font-size="8" fill="#0F172A">FK prerequisite_id &rarr; topics</text>
+
+        <!-- attendance table -->
+        <rect x="10" y="125" width="150" height="85" rx="4" fill="#FFFFFF" stroke="#0F766E" stroke-width="1.5"/>
+        <rect x="10" y="125" width="150" height="20" fill="#0F766E"/>
+        <text x="85" y="139" fill="#FFFFFF" font-size="9" font-weight="700" text-anchor="middle">attendance</text>
+        <text x="18" y="159" font-size="8" fill="#0F172A">PK id (SERIAL)</text>
+        <text x="18" y="172" font-size="8" fill="#0F172A">FK student_id &rarr; users</text>
+        <text x="18" y="185" font-size="8" fill="#0F172A">FK subject_id &rarr; subjects</text>
+        <text x="18" y="198" font-size="8" fill="#0F172A">total_classes, attended</text>
+
+        <!-- scores table -->
+        <rect x="195" y="60" width="145" height="100" rx="4" fill="#FFFFFF" stroke="#0F766E" stroke-width="1.5"/>
+        <rect x="195" y="60" width="145" height="20" fill="#0F766E"/>
+        <text x="267" y="74" fill="#FFFFFF" font-size="9" font-weight="700" text-anchor="middle">scores</text>
+        <text x="203" y="94" font-size="8" fill="#0F172A">PK id (SERIAL)</text>
+        <text x="203" y="107" font-size="8" fill="#0F172A">FK student_id &rarr; users</text>
+        <text x="203" y="120" font-size="8" fill="#0F172A">FK topic_id &rarr; topics</text>
+        <text x="203" y="133" font-size="8" fill="#0F172A">marks, max_marks</text>
+        <text x="203" y="146" font-size="8" fill="#0F172A">test_name, test_date</text>
+
+        <!-- Connector lines -->
+        <line x1="160" y1="50" x2="195" y2="85" stroke="#0F766E" stroke-width="1" stroke-dasharray="3,3"/>
+        <line x1="160" y1="165" x2="195" y2="130" stroke="#0F766E" stroke-width="1" stroke-dasharray="3,3"/>
+        <line x1="450" y1="82" x2="450" y2="110" stroke="#0F766E" stroke-width="1.5"/>
+        <line x1="340" y1="125" x2="370" y2="135" stroke="#0F766E" stroke-width="1" stroke-dasharray="3,3"/>
+      </svg>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <span>Academic Gap Detection System &mdash; Mini Project Report</span>
+    <span>Page 6 of 10</span>
+  </div>
+</section>
+
+<!-- ================= PAGE 7: MODULES & CORE LOGIC ================= -->
+<section class="page" id="page-7">
+  <div class="page-content">
+    <div class="page-header">
+      <h2>4. Modules &amp; Core Gap Logic</h2>
+      <div class="subtitle">System Components, Algorithm Rules, and Worked Example</div>
+    </div>
+
+    <h3>4.1 System Modules</h3>
+    <ul style="font-size: 9pt; margin-bottom: 4px;">
+      <li><strong>Authentication Module:</strong> Verifies credentials against bcrypt hashes and issues signed HttpOnly JWT cookies.</li>
+      <li><strong>Student Portal Module:</strong> Renders readiness gauges, subject breakdowns, and prioritized study recommendations.</li>
+      <li><strong>Teacher Analytics Module:</strong> Aggregates class metrics, cohort risk indicators, and student-by-topic heatmaps.</li>
+      <li><strong>Gap Detection Engine (<tt>lib/gapEngine.js</tt>):</strong> Central rule engine implementing threshold logic and study ordering.</li>
+    </ul>
+
+    <h3>4.2 Core Logic Rules (<tt>lib/gapEngine.js</tt>)</h3>
+    <ol style="font-size: 9pt; margin-bottom: 4px;">
+      <li><strong>Mastery:</strong> Computed as <tt>(sum of marks / sum of max_marks) * 100</tt> across all tests for that topic.</li>
+      <li><strong>Thresholds:</strong> &ge; 70% is <em>Strong</em>; 50% to 69% is <em>Needs Attention</em>; &lt; 50% is <em>Critical Gap</em>.</li>
+      <li><strong>Trend Detection:</strong> Evaluates latest two tests. If the score drops by 10+ points, topic is tagged <em>Declining</em>.</li>
+      <li><strong>Root Cause Tracing:</strong> If topic <em>A</em> is weak and its prerequisite <em>B</em> is weak, <em>B</em> is tagged <strong>Root Gap</strong> and <em>A</em> is tagged <strong>Affected</strong>.</li>
+      <li><strong>Study Priority:</strong> Ranked as: <em>Root Gaps &rarr; Critical Gaps &rarr; Declining &rarr; Needs Attention</em>.</li>
+    </ol>
+
+    <h3>4.3 Worked Numerical Example (Seed Data)</h3>
+    <p style="font-size: 9pt; margin-bottom: 3px;">
+      For student Aarav Sharma (<tt>student1@demo.com</tt>) in CS201 Data Structures:
+    </p>
+    <ul style="font-size: 9pt; margin-bottom: 4px;">
+      <li><strong>Arrays &amp; Pointers:</strong> Quiz 1 = 18/50, Mid-Term = 19/50, Unit Test = 17/50 &rarr; Mastery = <strong>36%</strong> (<em>Critical Gap</em>).</li>
+      <li><strong>Linked Lists:</strong> Prerequisite = Arrays &amp; Pointers. Scores: 21/50, 21/50, 20/50 &rarr; Mastery = <strong>42%</strong> (<em>Critical Gap</em>).</li>
+      <li><strong>Root Gap Evaluation:</strong> Both are weak. Because Linked Lists depends on Arrays &amp; Pointers, Arrays is marked <strong>Root Gap</strong> (Priority 1), while Linked Lists is marked <strong>Affected</strong>.</li>
+    </ul>
+
+    <h3 style="margin-top: 4px; margin-bottom: 2px;">4.4 Engine Implementation Snippet (lib/gapEngine.js)</h3>
+    <pre>
+export function findRootGaps(topicResults) {
+  const byId = new Map(topicResults.map((t) => [t.id, t]));
+  const hasWeakDependent = new Set(), affectedIds = new Set();
+  for (const topic of topicResults) {
+    if (isTopicWeak(topic.status) && topic.prerequisite_topic_id) {
+      const prereq = byId.get(topic.prerequisite_topic_id);
+      if (prereq && isTopicWeak(prereq.status)) {
+        affectedIds.add(topic.id);
+        hasWeakDependent.add(prereq.id);
+      }
+    }
+  }
+  return topicResults.map((t) => ({
+    ...t, isRootGap: hasWeakDependent.has(t.id) && !affectedIds.has(t.id),
+    isAffected: affectedIds.has(t.id)
+  }));
+}</pre>
+  </div>
+
+  <div class="page-footer">
+    <span>Academic Gap Detection System &mdash; Mini Project Report</span>
+    <span>Page 7 of 10</span>
+  </div>
+</section>
+
+<!-- ================= PAGE 8: SCREENSHOTS 1 ================= -->
+<section class="page" id="page-8">
+  <div class="page-content">
+    <div class="page-header">
+      <h2>5. System Screenshots &ndash; Part 1</h2>
+      <div class="subtitle">Authentication, Validation Rules, and Faculty Analytics</div>
+    </div>
+
+    <div class="grid-2x2">
+      <div class="screenshot-card">
+        <img src="screenshots/01-login.png" alt="Login Screen">
+        <div class="caption">
+          <strong>Figure 1: Authentication Portal</strong><br>
+          Clean login interface featuring role-based redirection and single-click demo account buttons.
+        </div>
+      </div>
+
+      <div class="screenshot-card">
+        <img src="screenshots/02-login-error.png" alt="Validation Error">
+        <div class="caption">
+          <strong>Figure 2: Validation Rule Trigger</strong><br>
+          System alerts users immediately with an error banner upon submitting invalid credentials.
+        </div>
+      </div>
+
+      <div class="screenshot-card">
+        <img src="screenshots/03-teacher-dashboard.png" alt="Teacher Overview">
+        <div class="caption">
+          <strong>Figure 3: Teacher Class Overview</strong><br>
+          Displays total students (12), class average readiness (59%), total critical gaps (43), and a searchable roster.
+        </div>
+      </div>
+
+      <div class="screenshot-card">
+        <img src="screenshots/04-teacher-heatmap.png" alt="Mastery Heatmap">
+        <div class="caption">
+          <strong>Figure 4: Topic Mastery Heatmap</strong><br>
+          Color-coded student-by-topic matrix highlighting Strong (&ge;70%), Attention (50-69%), and Critical (&lt;50%).
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <span>Academic Gap Detection System &mdash; Mini Project Report</span>
+    <span>Page 8 of 10</span>
+  </div>
+</section>
+
+<!-- ================= PAGE 9: SCREENSHOTS 2 ================= -->
+<section class="page" id="page-9">
+  <div class="page-content">
+    <div class="page-header">
+      <h2>6. System Screenshots &ndash; Part 2</h2>
+      <div class="subtitle">Student Dashboards, Study Plans, and Risk Alerts</div>
+    </div>
+
+    <div class="grid-2x2">
+      <div class="screenshot-card">
+        <img src="screenshots/05-teacher-weak-topics.png" alt="Class Weak Topics">
+        <div class="caption">
+          <strong>Figure 5: Class-Wide Weak Topics</strong><br>
+          Flags curriculum bottlenecks where over 40% of the class suffers from critical knowledge gaps.
+        </div>
+      </div>
+
+      <div class="screenshot-card">
+        <img src="screenshots/06-student-dashboard.png" alt="Student Dashboard">
+        <div class="caption">
+          <strong>Figure 6: Student Dashboard</strong><br>
+          Visualizes subject readiness via Chart.js bar charts and overall topic status with a doughnut chart.
+        </div>
+      </div>
+
+      <div class="screenshot-card">
+        <img src="screenshots/07-student-study-plan.png" alt="Prioritized Study Plan">
+        <div class="caption">
+          <strong>Figure 7: Prioritized Study Plan</strong><br>
+          Presents a sequenced remedial checklist placing foundational Root Gaps ahead of dependent topics.
+        </div>
+      </div>
+
+      <div class="screenshot-card">
+        <img src="screenshots/09-attendance-risk.png" alt="Attendance Risk Alert">
+        <div class="caption">
+          <strong>Figure 8: Attendance Risk Warning</strong><br>
+          Displays prominent risk warnings when a student's attendance drops below the 75% regulatory threshold.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <span>Academic Gap Detection System &mdash; Mini Project Report</span>
+    <span>Page 9 of 10</span>
+  </div>
+</section>
+
+<!-- ================= PAGE 10: TESTING & CONCLUSION ================= -->
+<section class="page" id="page-10">
+  <div class="page-content">
+    <div class="page-header">
+      <h2>7. Testing, Evaluation &amp; Conclusion</h2>
+      <div class="subtitle">Verification Results, Constraints, and Summary</div>
+    </div>
+
+    <h3>7.1 Test Execution Table</h3>
+    <table>
+      <thead>
+        <tr>
+          <th style="width: 11%;">TC #</th>
+          <th style="width: 27%;">Test Action</th>
+          <th style="width: 33%;">Expected Result</th>
+          <th style="width: 29%;">Actual Result</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>TC-01</strong></td>
+          <td>Enter invalid login password</td>
+          <td>401 response; error banner displayed</td>
+          <td>Passed. "Invalid email or password" shown</td>
+        </tr>
+        <tr>
+          <td><strong>TC-02</strong></td>
+          <td>Submit valid teacher credentials</td>
+          <td>Session cookie set; redirect to /teacher</td>
+          <td>Passed. Authenticated and redirected</td>
+        </tr>
+        <tr>
+          <td><strong>TC-03</strong></td>
+          <td>Compute topic mastery score</td>
+          <td>Average percentage of tests</td>
+          <td>Passed. Correctly averaged (e.g. 36%)</td>
+        </tr>
+        <tr>
+          <td><strong>TC-04</strong></td>
+          <td>Classify status threshold</td>
+          <td>&ge;70% Strong, 50-69% Attention, &lt;50% Critical</td>
+          <td>Passed. Badges match defined thresholds</td>
+        </tr>
+        <tr>
+          <td><strong>TC-05</strong></td>
+          <td>Evaluate declining trend</td>
+          <td>Drop &ge; 10% in latest two tests</td>
+          <td>Passed. Flagged Priya Nair declining topics</td>
+        </tr>
+        <tr>
+          <td><strong>TC-06</strong></td>
+          <td>Detect Root Gap in chain</td>
+          <td>Tag parent as Root Gap, child as Affected</td>
+          <td>Passed. Arrays flagged as root for Linked Lists</td>
+        </tr>
+        <tr>
+          <td><strong>TC-07</strong></td>
+          <td>Monitor 75% attendance</td>
+          <td>Flag "At Risk" when attendance &lt; 75%</td>
+          <td>Passed. Rohan Kulkarni flagged in 3 subjects</td>
+        </tr>
+        <tr>
+          <td><strong>TC-08</strong></td>
+          <td>Order study plan priority</td>
+          <td>Root Gaps &rarr; Critical &rarr; Declining &rarr; Attention</td>
+          <td>Passed. Sequence ordered correctly</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 4px;">
+      <div>
+        <h3 style="margin-top: 0; margin-bottom: 2px;">7.2 Limitations</h3>
+        <ul style="font-size: 8.5pt; margin-bottom: 0;">
+          <li>Thresholds are static (70/50%) rather than adaptive to difficulty.</li>
+          <li>Prerequisite chains cannot link topics across different subjects.</li>
+          <li>Application requires active network to reach Supabase.</li>
+          <li>System relies on teacher input; no automated quiz scanner.</li>
+        </ul>
+      </div>
+      <div>
+        <h3 style="margin-top: 0; margin-bottom: 2px;">7.3 Future Scope</h3>
+        <ul style="font-size: 8.5pt; margin-bottom: 0;">
+          <li>Cross-subject prerequisite dependency mapping.</li>
+          <li>LMS integration with platforms such as Moodle and Classroom.</li>
+          <li>Automated email alerts dispatched to at-risk students weekly.</li>
+          <li>Question-level error taxonomy tagging (conceptual vs syntax).</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3 style="margin-top: 6px; margin-bottom: 2px;">7.4 Conclusion</h3>
+    <p style="font-size: 8.8pt; margin-bottom: 4px;">
+      The Academic Gap Detection System successfully replaces opaque aggregate marks with transparent, topic-level diagnostic intelligence. By tracing prerequisite dependencies, the application guides students to resolve foundational gaps before attempting dependent concepts. Teachers gain immediate visibility into class-wide weak topics and attendance vulnerabilities through real-time heatmaps. The architecture is lightweight, reliable, and easily deployable on modern cloud platforms.
+    </p>
+
+    <h3 style="margin-top: 4px; margin-bottom: 2px;">7.5 References</h3>
+    <p style="font-size: 8pt; color: #475569; line-height: 1.3;">
+      [1] Next.js 14 Documentation, Vercel Inc., 2024. &bull;
+      [2] Supabase PostgreSQL Database &amp; API Guide, 2024. &bull;
+      [3] Chart.js HTML5 Canvas Visualizations (v4.4), 2024. &bull;
+      [4] RFC 7519 JSON Web Token (JWT) Specification, IETF. &bull;
+      [5] Playwright End-to-End Testing Framework, Microsoft Corp., 2024.
+    </p>
+  </div>
+
+  <div class="page-footer">
+    <span>Academic Gap Detection System &mdash; Mini Project Report</span>
+    <span>Page 10 of 10</span>
+  </div>
+</section>
+
+</body>
+</html>

@@ -52,12 +52,15 @@ export default function TeacherOverviewPage() {
               {stats.totalCriticalGaps}
             </div>
           </div>
-          <div className="stat-card">
+          <Link href="/teacher/attendance" className="stat-card" style={{ textDecoration: 'none' }} title="View Attendance & Import Excel">
             <div className="stat-label">Attendance Risk</div>
             <div className="stat-value" style={{ color: stats.atRiskStudentsCount > 0 ? 'var(--attention)' : 'inherit' }}>
               {stats.atRiskStudentsCount}
             </div>
-          </div>
+            <div className="muted" style={{ fontSize: 11, marginTop: 4 }}>
+              Manage &amp; Import &rarr;
+            </div>
+          </Link>
         </div>
       )}
 

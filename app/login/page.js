@@ -30,7 +30,9 @@ export default function LoginPage() {
         return;
       }
 
-      if (data.user.role === 'teacher') {
+      if (data.user.role === 'admin') {
+        router.push('/admin');
+      } else if (data.user.role === 'teacher') {
         router.push('/teacher');
       } else {
         router.push('/student');
@@ -109,6 +111,13 @@ export default function LoginPage() {
         <div className="demo-box">
           <div style={{ fontWeight: 600, marginBottom: 8 }}>Demo Accounts (password: demo123)</div>
           <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+            <button
+              type="button"
+              className="btn btn-outline btn-sm"
+              onClick={() => fillDemo('admin@demo.com')}
+            >
+              Admin Demo
+            </button>
             <button
               type="button"
               className="btn btn-outline btn-sm"

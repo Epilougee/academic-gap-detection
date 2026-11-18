@@ -1,13 +1,13 @@
 -- Academic Gap Detection System - Database Schema
 -- Paste this file into the Supabase SQL Editor and run it.
 
--- 1. Users table (students and teachers)
+-- 1. Users table (students, teachers, and admins)
 CREATE TABLE IF NOT EXISTS users (
   id SERIAL PRIMARY KEY,
   name TEXT NOT NULL,
   email TEXT NOT NULL UNIQUE,
   password_hash TEXT NOT NULL,
-  role TEXT NOT NULL CHECK (role IN ('student', 'teacher'))
+  role TEXT NOT NULL CHECK (role IN ('student', 'teacher', 'admin'))
 );
 
 -- 2. Subjects table
